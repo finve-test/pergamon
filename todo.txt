@@ -1,8 +1,10 @@
 - create initial rest app
-- split integration tests into integration-test directory
 - add book entity
 - add book service
 - add book resource
+- split integration tests into integration-test directory
+- add logger to all classes
+- add all crud operations
 - create github actions
 - upload artifact into google artifact repo
 - deploy app into k8s
