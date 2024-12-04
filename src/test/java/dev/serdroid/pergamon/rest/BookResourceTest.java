@@ -1,4 +1,4 @@
-package dev.serdroid;
+package dev.serdroid.pergamon.rest;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.is;
@@ -15,16 +15,8 @@ import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 
 @QuarkusTest
-@QuarkusTestResource(PostgresDB.class)
-class GreetingResourceTest {
-    @Test
-    void testHelloEndpoint() {
-        given()
-          .when().get("/hello")
-          .then()
-             .statusCode(200)
-             .body(is("Hello from Quarkus REST"));
-    }
+@QuarkusTestResource(PostgresDBContainer.class)
+class BookResourceTest {
 
     @Test
     void testGetAllBooks() {

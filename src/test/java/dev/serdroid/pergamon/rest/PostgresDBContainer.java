@@ -1,4 +1,4 @@
-package dev.serdroid;
+package dev.serdroid.pergamon.rest;
 
 import java.util.Collections;
 import java.util.Map;
@@ -10,7 +10,7 @@ import io.quarkus.test.common.QuarkusTestResourceLifecycleManager;
 import jakarta.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
-public class PostgresDB implements QuarkusTestResourceLifecycleManager {
+public class PostgresDBContainer implements QuarkusTestResourceLifecycleManager {
 
     private static PostgreSQLContainer<?> postgresqlContainer = new PostgreSQLContainer<>(DockerImageName.parse("postgres:16"))
             .withDatabaseName("pergamon")
