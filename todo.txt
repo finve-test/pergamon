@@ -2,9 +2,11 @@
 - add book entity
 - add book service
 - add book resource
+- first integration test
 - split integration tests into integration-test directory
 - add logger to all classes
-- add all crud operations
+- add all crud operations & tests
 - create github actions
 - upload artifact into google artifact repo
 - deploy app into k8s
+- add openapi definitions
