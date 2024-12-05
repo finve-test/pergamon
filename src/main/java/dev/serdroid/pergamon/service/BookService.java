@@ -36,4 +36,10 @@ public class BookService {
 		Book updated = bookRepository.getEntityManager().merge(book);
 		return updated;
 	}
+
+	@Transactional(Transactional.TxType.REQUIRED)
+	public boolean deleteBookById(Long id) {
+		return bookRepository.deleteById(id);
+	}
+
 }

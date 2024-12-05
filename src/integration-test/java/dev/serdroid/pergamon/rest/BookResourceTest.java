@@ -63,7 +63,7 @@ class BookResourceTest {
     	newBook.author = "Ray Bradbury";
     	newBook.isbn = "9";
     	newBook.price = new BigDecimal(15);
-		String location = given().contentType(ContentType.JSON).body(newBook).post("/api/books")
+		String location = given().contentType(ContentType.JSON).body(newBook).when().post("/api/books")
 		.then()
 			.statusCode(HttpStatus.SC_CREATED)
 			.extract().header("Location");
@@ -82,7 +82,7 @@ class BookResourceTest {
     	newBook.author = "Ray Bradbury";
     	newBook.isbn = "9781451673319";
     	newBook.price = new BigDecimal(25);
-    	Response response = given().contentType(ContentType.JSON).body(newBook).put("/api/books");
+    	Response response = given().contentType(ContentType.JSON).body(newBook).when().put("/api/books");
     	response.then()
 			.statusCode(HttpStatus.SC_OK)
 			.contentType(ContentType.JSON);
@@ -93,4 +93,21 @@ class BookResourceTest {
 
     }
     
+    @Test
+    @Order(4)
+    void deleteBook() {
+    	Response response = given().contentType(ContentType.JSON).pathParam("id",  NEW_BOOK_ID)
+    			.when().delete("/api/books/{id}");
+    	response.then()
+			.statusCode(HttpStatus.SC_NO_CONTENT);
+
+    	// Check record count
+    	response = given().contentType(ContentType.JSON).when().get("/api/books");
+		response.then()
+			.statusCode(HttpStatus.SC_OK)
+			.contentType(ContentType.JSON)
+			;
+		List<Book> allBooks = response.jsonPath().getList("", Book.class);
+		assertThat(allBooks.size(), is(3));
+	}
 }
