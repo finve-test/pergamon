@@ -3,6 +3,8 @@ plugins {
     id("io.quarkus")
 }
 
+import java.io.ByteArrayOutputStream
+
 repositories {
     mavenCentral()
     mavenLocal()
@@ -11,6 +13,24 @@ repositories {
 val quarkusPlatformGroupId: String by project
 val quarkusPlatformArtifactId: String by project
 val quarkusPlatformVersion: String by project
+
+sourceSets {
+    val integration by creating {
+	    java.srcDir("src/integration-test/java")
+    	resources.srcDir("src/integration-test/resources")
+        compileClasspath += sourceSets["main"].output + sourceSets["test"].output
+        runtimeClasspath += sourceSets["main"].output + sourceSets["test"].output
+    }
+}
+
+configurations {
+    val integrationImplementation by getting {
+        extendsFrom(configurations.testImplementation.get())
+    }
+    val integrationRuntimeOnly by getting {
+        extendsFrom(configurations.testRuntimeOnly.get())
+    }
+}
 
 dependencies {
     implementation(enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}"))
@@ -22,10 +42,13 @@ dependencies {
 
     testImplementation("io.quarkus:quarkus-junit5")
     testImplementation("io.rest-assured:rest-assured")
-	testImplementation("org.testcontainers:testcontainers:1.19.8")
-	testImplementation("org.testcontainers:junit-jupiter:1.19.8")
-	testImplementation("org.testcontainers:postgresql:1.19.8")
 	testRuntimeOnly("org.postgresql:postgresql")	
+
+    "integrationImplementation"("io.quarkus:quarkus-junit5")
+	"integrationImplementation"("org.testcontainers:testcontainers:1.19.8")
+	"integrationImplementation"("org.testcontainers:junit-jupiter:1.19.8")
+	"integrationImplementation"("org.testcontainers:postgresql:1.19.8")
+	"integrationImplementation"("io.rest-assured:rest-assured:5.5.0")
 }
 
 group = "dev.serdroid"
@@ -42,4 +65,22 @@ tasks.withType<Test> {
 tasks.withType<JavaCompile> {
     options.encoding = "UTF-8"
     options.compilerArgs.add("-parameters")
+}
+
+val integrationTest by tasks.creating(Test::class) {
+    description = "Runs the integration tests"
+    group = "verification"
+	// start podman.service before integrationTest
+	// systemctl start --user podman.service
+    val outputStream = ByteArrayOutputStream()
+    project.exec {
+    	commandLine("id", "-u")
+        standardOutput = outputStream
+    }
+    val uid = outputStream.toString().trim()
+    environment("DOCKER_HOST", "unix:///run/user/$uid/podman/podman.sock")
+    
+    testClassesDirs = sourceSets["integration"].output.classesDirs
+    classpath = sourceSets["integration"].runtimeClasspath
+    mustRunAfter(tasks["test"])
 }
