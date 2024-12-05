@@ -9,4 +9,4 @@ insert into book (id, title, author, isbn, price) values(2, 'Brave New World', '
 insert into book (id, title, author, isbn, price) values(3, 'We', 'Yevgeny Zamyatin', '9780140185850', 29.9);
 
 ALTER SEQUENCE book_seq RESTART WITH 4;
-select nextval('book_seq');
+

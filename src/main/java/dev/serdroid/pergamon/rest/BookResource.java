@@ -9,12 +9,16 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
+import jakarta.ws.rs.core.UriBuilder;
+import jakarta.ws.rs.core.UriInfo;
 
 @ApplicationScoped
 @Path("/api/books")
@@ -41,5 +45,12 @@ public class BookResource {
 		else {
 			return Response.status(Status.NOT_FOUND).build();
 		}
+	}
+	
+	@POST
+	public Response createBook(Book book, @Context UriInfo uriInfo) {
+		Book saved = bookService.persistBook(book);
+		UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(Long.toString(saved.id));
+		return Response.created(uriBuilder.build()).build();
 	}
 }

@@ -24,4 +24,11 @@ public class BookService {
 	public Optional<Book> findBookById(Long id) {
 		return bookRepository.findByIdOptional(id);
 	}
+
+	@Transactional(Transactional.TxType.REQUIRED)
+	public Book persistBook(Book book) {
+		bookRepository.persist(book);
+		return book;
+	}
+
 }
