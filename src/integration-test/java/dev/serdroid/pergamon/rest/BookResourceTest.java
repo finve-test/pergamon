@@ -32,4 +32,16 @@ class BookResourceTest {
 		assertThat(allBooks.get(2).author, is("Yevgeny Zamyatin"));
     }
     
+    @Test
+    void testfindBookByIdWhenBookIsFound() {
+		Response response = given().contentType(ContentType.JSON).when().get("/api/books/2");
+		response.then()
+			.statusCode(200)
+			.contentType(ContentType.JSON)
+			;
+		Book found = response.jsonPath().getObject("", Book.class);
+		assertThat(found.title, is("Brave New World"));
+		assertThat(found.author, is("Aldous Huxley"));
+    }
+    
 }

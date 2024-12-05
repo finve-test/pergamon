@@ -1,6 +1,7 @@
 package dev.serdroid.pergamon.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import dev.serdroid.pergamon.model.Book;
 import dev.serdroid.pergamon.repository.BookRepository;
@@ -17,5 +18,10 @@ public class BookService {
 	@Transactional(Transactional.TxType.SUPPORTS)
 	public List<Book> listAll() {
 		return bookRepository.listAll();
+	}
+
+	@Transactional(Transactional.TxType.SUPPORTS)
+	public Optional<Book> findBookById(Long id) {
+		return bookRepository.findByIdOptional(id);
 	}
 }
