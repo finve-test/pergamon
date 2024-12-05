@@ -31,4 +31,9 @@ public class BookService {
 		return book;
 	}
 
+	@Transactional(Transactional.TxType.REQUIRED)
+	public Book updateBook(Book book) {
+		Book updated = bookRepository.getEntityManager().merge(book);
+		return updated;
+	}
 }

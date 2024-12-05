@@ -10,6 +10,7 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
@@ -52,5 +53,11 @@ public class BookResource {
 		Book saved = bookService.persistBook(book);
 		UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(Long.toString(saved.id));
 		return Response.created(uriBuilder.build()).build();
+	}
+
+	@PUT
+	public Response updateBook(Book book) {
+		Book updated = bookService.updateBook(book);
+		return Response.ok(updated).build();
 	}
 }

@@ -24,13 +24,15 @@ import io.restassured.response.Response;
 @QuarkusTestResource(PostgresDBContainer.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class BookResourceTest {
+	
+	private static final long NEW_BOOK_ID = 4L; 
 
     @Test
     @Order(0)
-    void testGetAllBooks() {
+    void getAllBooks() {
 		Response response = given().contentType(ContentType.JSON).when().get("/api/books");
 		response.then()
-			.statusCode(200)
+			.statusCode(HttpStatus.SC_OK)
 			.contentType(ContentType.JSON)
 			;
 		List<Book> allBooks = response.jsonPath().getList("", Book.class);
@@ -42,7 +44,7 @@ class BookResourceTest {
     
     @Test
     @Order(1)
-    void testfindBookByIdWhenBookIsFound() {
+    void findBookByIdWhenBookIsFound() {
 		Response response = given().contentType(ContentType.JSON).when().get("/api/books/2");
 		response.then()
 			.statusCode(200)
@@ -55,11 +57,11 @@ class BookResourceTest {
     
     @Test
     @Order(2)
-    void testcreateBook() {
+    void createBook() {
     	Book newBook = new Book();
     	newBook.title = "Fahrenheit 451";
     	newBook.author = "Ray Bradbury";
-    	newBook.author = "9781451673319";
+    	newBook.isbn = "9";
     	newBook.price = new BigDecimal(15);
 		String location = given().contentType(ContentType.JSON).body(newBook).post("/api/books")
 		.then()
@@ -67,8 +69,28 @@ class BookResourceTest {
 			.extract().header("Location");
 
 		assertTrue(location.contains("/api/books/"));
-		int newid = Integer.parseInt( location.substring( location.lastIndexOf('/') + 1 ) );
-		assertThat(newid, is(4));
+		long newid = Long.parseLong( location.substring( location.lastIndexOf('/') + 1 ) );
+		assertThat(newid, is(NEW_BOOK_ID));
+    }
+    
+    @Test
+    @Order(3)
+    void updateBook() {
+    	Book newBook = new Book();
+    	newBook.id = NEW_BOOK_ID;
+    	newBook.title = "Fahrenheit 451";
+    	newBook.author = "Ray Bradbury";
+    	newBook.isbn = "9781451673319";
+    	newBook.price = new BigDecimal(25);
+    	Response response = given().contentType(ContentType.JSON).body(newBook).put("/api/books");
+    	response.then()
+			.statusCode(HttpStatus.SC_OK)
+			.contentType(ContentType.JSON);
+		Book updated = response.jsonPath().getObject("", Book.class);
+		assertThat(updated.id, is(NEW_BOOK_ID));
+		assertThat(updated.isbn, is("9781451673319"));
+		assertThat(updated.price, is(new BigDecimal(25)));
+
     }
     
 }
