@@ -1,0 +1,13 @@
+name: Docker Image Build
+on:
+  push:
+    branches: [ $default-branch ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Build the Docker image
+      run: docker build . --file dockerfile-native --tag pergamon:$(gradle properties | grep version: | cut -d ' ' -f 2)
