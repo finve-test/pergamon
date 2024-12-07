@@ -1,6 +1,6 @@
 FROM gradle:8.11.1-jdk21-graal AS builder
 WORKDIR /usr/app/
-COPY . .
+COPY . /usr/app/
 RUN /usr/bin/gradle clean quarkusBuild -Dquarkus.package.jar.enabled=false -Dquarkus.native.enabled=true --no-daemon 
 
 FROM ubuntu:jammy
