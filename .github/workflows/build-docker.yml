@@ -10,8 +10,10 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v4
+    - name: Current dir
+      run: pwd
     - name: List files
       run: |
         ls -l ${{ github.workspace }}
     - name: Build the Docker image
-      run: docker build . --file dockerfile-native --tag pergamon:$(gradle properties | grep 'version:' | cut -d ' ' -f 2)
+      run: docker build ${{ github.workspace }} --file dockerfile-native --tag pergamon:$(gradle properties | grep 'version:' | cut -d ' ' -f 2)
