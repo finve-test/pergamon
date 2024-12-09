@@ -40,4 +40,4 @@ jobs:
         username: oauth2accesstoken
         password: ${{ steps.auth.outputs.access_token }}
     - name: Push the Docker image
-      run: docker image push --tag ${{ steps.get-tag.outputs.full_tag }}
+      run: docker image push ${{ steps.get-tag.outputs.full_tag }}
