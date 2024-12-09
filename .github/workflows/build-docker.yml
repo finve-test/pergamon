@@ -19,7 +19,7 @@ jobs:
         ls -l ${{ github.workspace }}
     - name: Get tag
       id: get-tag
-      run: echo ::set-output name=full_tag::${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+      run: echo ::set-output name=full_tag::${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:$(gradle properties | grep 'version:' | cut -d ' ' -f 2)
     - name: Build the Docker image
       run: docker build . --file dockerfile-native --tag ${{ steps.get-tag.outputs.full_tag }}
     - id: auth
