@@ -1,5 +1,4 @@
-- create github actions
-- add logger to all classes
 - upload artifact into google artifact repo
+- add logger to all classes
 - deploy app into k8s
 - add openapi definitions
