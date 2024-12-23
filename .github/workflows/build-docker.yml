@@ -19,7 +19,7 @@ jobs:
       uses: actions/checkout@v4
     - name: Get tag
       id: get-tag
-      run: echo "full_tag=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:$(gradle properties | grep 'version:' | cut -d ' ' -f 2)" >> "$GITHUB_OUTPUT"
+      run: echo "full_tag=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:$(./gradlew properties | grep 'version:' | cut -d ' ' -f 2)" >> "$GITHUB_OUTPUT"
     - id: auth
       name: Google Cloud Authentication
       uses: 'google-github-actions/auth@v2'
