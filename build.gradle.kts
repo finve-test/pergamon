@@ -51,8 +51,7 @@ dependencies {
 	"integrationImplementation"("io.rest-assured:rest-assured:5.5.0")
 }
 
-group = "dev.serdroid"
-version = "1.0.0-SNAPSHOT"
+group = "dev.serdroid.pergamon"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_21
