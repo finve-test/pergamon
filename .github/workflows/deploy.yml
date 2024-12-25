@@ -31,11 +31,5 @@ jobs:
       with:
          method: kubeconfig
          kubeconfig: ${{ secrets.PERGAMON_K8S_CONFIG }}
-    - name: Deploy to k8s
-      uses: Azure/k8s-deploy@v5
-      with:
-         namespace: 'pergamon'
-         manifests: |
-            k8s
-         images: ${{ steps.get-tag.outputs.full_tag }}
-
+    - name: Run kubectl
+      run: ${{ steps.install.outputs.kubectl-path }} get ns 
