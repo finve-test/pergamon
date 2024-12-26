@@ -1,0 +1,38 @@
+kind: Service
+apiVersion: v1
+metadata:
+  labels:
+    app: __IMAGE_NAME__
+  name: __IMAGE_NAME__-service
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: 8080
+  selector:
+    app: __IMAGE_NAME__
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: __IMAGE_NAME__
+spec:
+  replicas: 1
+  revisionHistoryLimit: 5
+  selector:
+    matchLabels:
+      app: __IMAGE_NAME__
+
+  template:
+    metadata:
+      labels:
+        app: __IMAGE_NAME__
+    spec:
+      containers:
+        - name: __IMAGE_NAME__
+          image: europe-west10-docker.pkg.dev/finveloxrepo/image-repo/__IMAGE_NAME__:__IMAGE_VER__
+          ports:
+            - containerPort: 8080
+      imagePullSecrets:
+        - name: gar-reader-sa-secret
+
