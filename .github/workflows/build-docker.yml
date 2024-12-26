@@ -40,6 +40,7 @@ jobs:
       uses: docker/build-push-action@v6
       with:
         push: true
+        provenance: false
         tags: |
           ${{ steps.get-tag.outputs.full_tag }}
           ${{ steps.get-tag.outputs.full_tag }}-${{ github.sha }}
