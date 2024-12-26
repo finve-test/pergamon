@@ -34,7 +34,13 @@ jobs:
         registry: europe-west10-docker.pkg.dev
         username: oauth2accesstoken
         password: ${{ steps.auth.outputs.access_token }}
-    - name: Build the Docker image
-      run: docker build . --file dockerfile-native --tag ${{ steps.get-tag.outputs.full_tag }}
-    - name: Push the Docker image
-      run: docker image push ${{ steps.get-tag.outputs.full_tag }}
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+    - name: Build and push
+      uses: docker/build-push-action@v6
+      with:
+        push: true
+        tags: |
+          ${{ steps.get-tag.outputs.full_tag }}
+          ${{ steps.get-tag.outputs.full_tag }}-${{ github.sha }}
+
